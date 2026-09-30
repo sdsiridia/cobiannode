@@ -1,0 +1,155 @@
+{
+  "info": {
+    "name": "Dashboard Ingesist — API",
+    "_postman_id": "b1a5c9e0-1111-4a2b-8c33-dashboardinges1",
+    "description": "Colección completa de la API del Dashboard Ingesist.\n\n**Cómo usarla:**\n1. Importa este archivo en Postman o Insomnia.\n2. Ejecuta primero `Auth → Login` (usuario/contraseña del dashboard). La sesión se guarda automáticamente como cookie httpOnly y las demás rutas la usan solas.\n3. Para la revisión de Gmail: guarda credenciales con `Monitor → Guardar credenciales`, luego `Lanzar revisión` y consulta el progreso con el `jobId` devuelto.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://localhost:3000" },
+    { "key": "jobId", "value": "", "description": "Se rellena automáticamente al lanzar una revisión" },
+    { "key": "credencialId", "value": "1" },
+    { "key": "usuarioId", "value": "1" }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Login correcto', () => pm.response.code === 200);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/api/auth/login",
+            "body": { "mode": "raw", "raw": "{\n  \"usuario\": \"admin\",\n  \"contrasena\": \"admin123\"\n}" }
+          }
+        },
+        { "name": "Yo (sesión actual)", "request": { "method": "GET", "url": "{{base_url}}/api/auth/yo" } },
+        { "name": "Logout", "request": { "method": "POST", "url": "{{base_url}}/api/auth/logout", "body": { "mode": "raw", "raw": "{}" } } },
+        { "name": "Lista de apps del menú", "request": { "method": "GET", "url": "{{base_url}}/api/apps" } }
+      ]
+    },
+    {
+      "name": "Monitor de errores Gmail",
+      "item": [
+        { "name": "Ver credenciales guardadas", "request": { "method": "GET", "url": "{{base_url}}/api/monitor/credenciales" } },
+        {
+          "name": "Guardar credenciales",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/api/monitor/credenciales",
+            "body": { "mode": "raw", "raw": "{\n  \"correo\": \"tucuenta@gmail.com\",\n  \"contrasena\": \"CONTRASENA_DE_APLICACION_16\"\n}" }
+          }
+        },
+        { "name": "Borrar credenciales", "request": { "method": "DELETE", "url": "{{base_url}}/api/monitor/credenciales" } },
+        {
+          "name": "Lanzar revisión",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const d = pm.response.json();",
+                  "if (d.jobId) pm.collectionVariables.set('jobId', d.jobId);",
+                  "pm.test('Revisión lanzada', () => pm.response.code === 200);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/api/monitor/revisar",
+            "body": { "mode": "raw", "raw": "{\n  \"marcarLeidosConErrores\": false\n}" }
+          }
+        },
+        { "name": "Progreso del trabajo", "request": { "method": "GET", "url": "{{base_url}}/api/monitor/jobs/{{jobId}}" } },
+        { "name": "Resultados del trabajo", "request": { "method": "GET", "url": "{{base_url}}/api/monitor/resultados/{{jobId}}" } }
+      ]
+    },
+    {
+      "name": "Historial",
+      "item": [
+        { "name": "Listar historial", "request": { "method": "GET", "url": { "raw": "{{base_url}}/api/historial?limite=100&q=&tipo=&empresa=", "host": ["{{base_url}}"], "path": ["api", "historial"], "query": [ { "key": "limite", "value": "100" }, { "key": "q", "value": "" }, { "key": "tipo", "value": "" }, { "key": "empresa", "value": "" } ] } } },
+        { "name": "Empresas", "request": { "method": "GET", "url": "{{base_url}}/api/historial/empresas" } },
+        { "name": "Resumen (gráfico)", "request": { "method": "GET", "url": "{{base_url}}/api/historial/resumen" } },
+        { "name": "Exportar CSV", "request": { "method": "GET", "url": "{{base_url}}/api/historial/export/csv" } },
+        { "name": "Exportar Excel", "request": { "method": "GET", "url": "{{base_url}}/api/historial/export/xlsx" } },
+        { "name": "Borrar todo el historial", "request": { "method": "DELETE", "url": "{{base_url}}/api/historial" } }
+      ]
+    },
+    {
+      "name": "Credenciales",
+      "item": [
+        { "name": "Listar / buscar", "request": { "method": "GET", "url": { "raw": "{{base_url}}/api/credenciales?q=", "host": ["{{base_url}}"], "path": ["api", "credenciales"], "query": [{ "key": "q", "value": "" }] } } },
+        {
+          "name": "Crear",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/api/credenciales",
+            "body": { "mode": "raw", "raw": "{\n  \"titulo\": \"Ejemplo Servidor\",\n  \"usuario\": \"admin\",\n  \"contrasena\": \"secreto123\",\n  \"url\": \"https://ejemplo.com\",\n  \"notas\": \"Notas opcionales\"\n}" }
+          }
+        },
+        {
+          "name": "Editar",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/api/credenciales/{{credencialId}}",
+            "body": { "mode": "raw", "raw": "{\n  \"titulo\": \"Ejemplo editado\",\n  \"usuario\": \"admin\",\n  \"contrasena\": \"nuevaClave\",\n  \"url\": \"https://ejemplo.com\",\n  \"notas\": \"\"\n}" }
+          }
+        },
+        { "name": "Borrar", "request": { "method": "DELETE", "url": "{{base_url}}/api/credenciales/{{credencialId}}" } },
+        {
+          "name": "Importar CSV (KeePass)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "text/plain" }],
+            "url": "{{base_url}}/api/credenciales/importar",
+            "body": { "mode": "raw", "raw": "\"Account\",\"Login Name\",\"Password\",\"Web Site\",\"Comments\"\n\"Ejemplo\",\"usuario\",\"clave\",\"https://ejemplo.com\",\"\"" }
+          }
+        },
+        { "name": "Exportar CSV", "request": { "method": "GET", "url": "{{base_url}}/api/credenciales/export/csv" } }
+      ]
+    },
+    {
+      "name": "Usuarios",
+      "item": [
+        { "name": "Listar", "request": { "method": "GET", "url": "{{base_url}}/api/usuarios" } },
+        {
+          "name": "Crear",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/api/usuarios",
+            "body": { "mode": "raw", "raw": "{\n  \"usuario\": \"nuevo.usuario\",\n  \"contrasena\": \"suClave123\",\n  \"rol\": \"usuario\"\n}" }
+          }
+        },
+        {
+          "name": "Editar (rol / contraseña)",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/api/usuarios/{{usuarioId}}",
+            "body": { "mode": "raw", "raw": "{\n  \"rol\": \"admin\",\n  \"contrasena\": \"nuevaClave\"\n}" }
+          }
+        },
+        { "name": "Borrar", "request": { "method": "DELETE", "url": "{{base_url}}/api/usuarios/{{usuarioId}}" } }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+# Dependencias
+node_modules/
+
+# Datos locales
+data/*.db
+data/*.db-journal
+data/*.db-wal
+data/*.db-shm
+
+# Entorno
+.env
+
+# Build del cliente
+client/dist/
