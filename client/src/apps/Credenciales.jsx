@@ -15,6 +15,7 @@ function CeldaEditable ({ id, campo, valor, mostrar, onGuardado, placeholderVaci
   // Campo contraseña: si no se escribe nada, no se cambia (el servidor
   // mantiene la anterior cuando recibe '' en contrasena).
   const esPassword = campo === 'contrasena'
+  const multilinea = campo === 'notas'
 
   function empezar () {
     // Si la contraseña está oculta, el campo empieza vacío para no filtrarla
@@ -25,6 +26,7 @@ function CeldaEditable ({ id, campo, valor, mostrar, onGuardado, placeholderVaci
 
   async function guardar () {
     setEditando(false)
+    if (campo === 'titulo' && !texto.trim()) return // el título no puede quedar vacío
     if (texto === (valor || '')) return // sin cambios
     try {
       await api.put(`/api/credenciales/${id}`, { [campo]: texto })
@@ -38,12 +40,30 @@ function CeldaEditable ({ id, campo, valor, mostrar, onGuardado, placeholderVaci
     const visible = esPassword ? (mostrar ? valor : '••••••••') : valor
     return (
       <span
-        className="celda-editable"
-        title={valor || '(vacío) — clic para editar'}
+        className={`celda-editable ${multilinea ? 'celda-notas' : ''}`}
+        title={(valor || '(vacío)') + ' — clic para editar'}
         onClick={empezar}
       >
         {visible || <i className="celda-vacia">{placeholderVacio || '—'}</i>}
       </span>
+    )
+  }
+
+  // Las notas se editan en un cuadro multilínea; el resto, en una línea.
+  if (campo === 'notas') {
+    return (
+      <textarea
+        ref={inputRef}
+        className="celda-textarea"
+        rows={4}
+        value={texto}
+        onChange={e => setTexto(e.target.value)}
+        onBlur={guardar}
+        onKeyDown={e => {
+          if (e.key === 'Escape') setEditando(false)
+          if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) e.target.blur() // Ctrl+Intro guarda
+        }}
+      />
     )
   }
 
