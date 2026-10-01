@@ -52,11 +52,11 @@ export default function Usuarios () {
 
       <section className="tarjeta">
         <form onSubmit={crear} className="form-usuario">
-          <input placeholder="Usuario" value={nuevo.usuario}
-            onChange={e => setNuevo({ ...nuevo, usuario: e.target.value })} />
-          <input type="password" placeholder="Contraseña" value={nuevo.contrasena}
-            onChange={e => setNuevo({ ...nuevo, contrasena: e.target.value })} />
-          <select value={nuevo.rol} onChange={e => setNuevo({ ...nuevo, rol: e.target.value })}>
+          <input id="usu-nuevo-usuario" name="usuario" placeholder="Usuario" value={nuevo.usuario}
+            onChange={e => setNuevo({ ...nuevo, usuario: e.target.value })} autoComplete="off" />
+          <input id="usu-nuevo-contrasena" name="contrasena" type="password" placeholder="Contraseña" value={nuevo.contrasena}
+            onChange={e => setNuevo({ ...nuevo, contrasena: e.target.value })} autoComplete="new-password" />
+          <select id="usu-nuevo-rol" name="rol" value={nuevo.rol} onChange={e => setNuevo({ ...nuevo, rol: e.target.value })}>
             <option value="usuario">Usuario</option>
             <option value="admin">Administrador</option>
           </select>
@@ -76,7 +76,7 @@ export default function Usuarios () {
               <tr key={f.id}>
                 <td><strong>{f.usuario}</strong>{f.id === yo.id && <small> (tú)</small>}</td>
                 <td>
-                  <select value={f.rol} onChange={e => cambiarRol(f.id, e.target.value)}>
+                  <select id={`usu-rol-${f.id}`} name="rol-usuario" value={f.rol} onChange={e => cambiarRol(f.id, e.target.value)} aria-label={`Rol de ${f.usuario}`}>
                     <option value="usuario">Usuario</option>
                     <option value="admin">Administrador</option>
                   </select>

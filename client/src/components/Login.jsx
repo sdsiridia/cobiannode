@@ -36,6 +36,8 @@ export default function Login () {
         <label>
           Usuario
           <input
+            id="login-usuario"
+            name="usuario"
             value={usuario_}
             onChange={e => setUsuario_(e.target.value)}
             autoFocus
@@ -45,6 +47,8 @@ export default function Login () {
         <label>
           Contraseña
           <input
+            id="login-contrasena"
+            name="contrasena"
             type="password"
             value={contrasena}
             onChange={e => setContrasena(e.target.value)}

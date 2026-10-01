@@ -150,13 +150,15 @@ export default function Credenciales () {
       <section className="tarjeta">
         <div className="filtros">
           <input
+            id="cred-buscador"
+            name="buscador"
             placeholder="Buscar por título, usuario, URL o notas…"
             value={q}
             onChange={e => setQ(e.target.value)}
             className="crece"
           />
-          <label className="casilla">
-            <input type="checkbox" checked={mostrarPass} onChange={e => setMostrarPass(e.target.checked)} />
+          <label className="casilla" htmlFor="cred-mostrar-pass">
+            <input id="cred-mostrar-pass" name="mostrarPass" type="checkbox" checked={mostrarPass} onChange={e => setMostrarPass(e.target.checked)} />
             Mostrar contraseñas
           </label>
           <button onClick={() => setEditando({ ...VACIA })}>➕ Nueva</button>
@@ -211,20 +213,20 @@ export default function Credenciales () {
         <div className="modal-fondo" onClick={() => setEditando(null)}>
           <form className="modal" onClick={e => e.stopPropagation()} onSubmit={guardar}>
             <h2>{editando.id ? 'Editar credencial' : 'Nueva credencial'}</h2>
-            <label>Título
-              <input value={editando.titulo} onChange={e => setEditando({ ...editando, titulo: e.target.value })} autoFocus />
+            <label htmlFor="cred-titulo">Título
+              <input id="cred-titulo" name="titulo" value={editando.titulo} onChange={e => setEditando({ ...editando, titulo: e.target.value })} autoFocus />
             </label>
-            <label>Usuario
-              <input value={editando.usuario} onChange={e => setEditando({ ...editando, usuario: e.target.value })} />
+            <label htmlFor="cred-usuario">Usuario
+              <input id="cred-usuario" name="usuario" value={editando.usuario} onChange={e => setEditando({ ...editando, usuario: e.target.value })} autoComplete="off" />
             </label>
-            <label>Contraseña
-              <input value={editando.contrasena} onChange={e => setEditando({ ...editando, contrasena: e.target.value })} />
+            <label htmlFor="cred-contrasena">Contraseña
+              <input id="cred-contrasena" name="contrasena" value={editando.contrasena} onChange={e => setEditando({ ...editando, contrasena: e.target.value })} autoComplete="new-password" />
             </label>
-            <label>URL
-              <input value={editando.url} onChange={e => setEditando({ ...editando, url: e.target.value })} />
+            <label htmlFor="cred-url">URL
+              <input id="cred-url" name="url" value={editando.url} onChange={e => setEditando({ ...editando, url: e.target.value })} />
             </label>
-            <label>Notas
-              <textarea rows={4} value={editando.notas} onChange={e => setEditando({ ...editando, notas: e.target.value })} />
+            <label htmlFor="cred-notas">Notas
+              <textarea id="cred-notas" name="notas" rows={4} value={editando.notas} onChange={e => setEditando({ ...editando, notas: e.target.value })} />
             </label>
             <div className="modal-botones">
               <button type="button" className="secundario" onClick={() => setEditando(null)}>Cancelar</button>

@@ -105,13 +105,13 @@ function Revision () {
             )
           : (
             <form onSubmit={guardarCred} className="form-cred">
-              <label>
+              <label htmlFor="gmail-correo">
                 Correo de Gmail
-                <input value={correo} onChange={e => setCorreo(e.target.value)} placeholder="tucuenta@gmail.com" />
+                <input id="gmail-correo" name="correo" value={correo} onChange={e => setCorreo(e.target.value)} placeholder="tucuenta@gmail.com" autoComplete="off" />
               </label>
-              <label>
+              <label htmlFor="gmail-contrasena">
                 Contraseña de aplicación (16 caracteres)
-                <input type="password" value={contrasena} onChange={e => setContrasena(e.target.value)} />
+                <input id="gmail-contrasena" name="contrasena" type="password" value={contrasena} onChange={e => setContrasena(e.target.value)} autoComplete="new-password" />
               </label>
               <p className="nota">
                 Gmail exige una <b>contraseña de aplicación</b>: activa la verificación en dos pasos y
@@ -125,8 +125,8 @@ function Revision () {
 
       <section className="tarjeta">
         <div className="fila-revisar">
-          <label className="casilla">
-            <input type="checkbox" checked={marcarTodos} onChange={e => setMarcarTodos(e.target.checked)} />
+          <label className="casilla" htmlFor="rev-marcar-todos">
+            <input id="rev-marcar-todos" name="marcarLeidosConErrores" type="checkbox" checked={marcarTodos} onChange={e => setMarcarTodos(e.target.checked)} />
             Marcar como leídos también los correos con errores
           </label>
           <button onClick={revisar} disabled={estado === 'en_curso'}>
@@ -262,12 +262,12 @@ function Historial () {
     <>
       <section className="tarjeta">
         <div className="filtros">
-          <input placeholder="Buscar asunto o empresa…" value={q} onChange={e => setQ(e.target.value)} />
-          <select value={empresa} onChange={e => setEmpresa(e.target.value)}>
+          <input id="hist-buscador" name="buscador" placeholder="Buscar asunto o empresa…" value={q} onChange={e => setQ(e.target.value)} />
+          <select id="hist-empresa" name="empresa" value={empresa} onChange={e => setEmpresa(e.target.value)} aria-label="Filtrar por empresa">
             <option value="">Todas las empresas</option>
             {empresas.map(e => <option key={e} value={e}>{e}</option>)}
           </select>
-          <select value={tipo} onChange={e => setTipo(e.target.value)}>
+          <select id="hist-tipo" name="tipo" value={tipo} onChange={e => setTipo(e.target.value)} aria-label="Filtrar por tipo">
             <option value="">Todos los tipos</option>
             <option value="cobian">Cobian</option>
             <option value="acronis">Acronis</option>

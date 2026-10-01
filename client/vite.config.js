@@ -5,6 +5,7 @@ import react from '@vitejs/plugin-react'
 // En producción, `npm run build` genera dist/ que sirve el propio Express.
 export default defineConfig({
   plugins: [react()],
+  publicDir: '../img',
   server: {
     port: 5173,
     proxy: {
